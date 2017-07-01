@@ -1,0 +1,51 @@
+A = load 'a.txt' using PigStorage(',') as (name:chararray,num:int);
+B = load 'b.txt' using PigStorage(',') as (name:chararray,num:int);
+
+--Concat
+
+concB = foreach A generate CONCAT(name,'.namaste');
+
+
+--Tokenize
+
+TokA = foreach A generate TOKENIZE(name,',');
+
+--Sum
+
+grpB = GROUP B by name;
+SumB = foreach grpB generate group, SUM(B.num);
+
+--Min
+
+MinB = foreach grpB generate group, MIN(B.num);
+
+--Max
+
+MaxB = foreach grpB generate group, MAX(B.num);
+
+--Limit
+
+LmtA = Limit A 2;
+
+--Store
+
+StoreB = Store B into 'storeb.pigout';
+
+--Distinct
+
+distA = distinct A;
+
+--Flatten
+
+FlattenB = foreach B generate FLATTEN(TOKENIZE(name,' '));
+
+--IsEmpty
+
+dump concB;
+dump TokA;
+dump SumB;
+dump MinB;
+dump MaxB;
+dump LmtA;
+dump StoreB;
+dump distA;
